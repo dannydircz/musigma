@@ -91,6 +91,7 @@ def post():
 
 
 @app.route('/')
+@login_required
 def index():
     stream = models.Post.select().limit(100)
     return render_template('stream.html', stream=stream)
@@ -99,6 +100,7 @@ def index():
 
 @app.route('/stream')
 @app.route('/stream/<username>')
+@login_required
 def stream(username=None):
     template = 'stream.html'
     if username and username != current_user.username:
@@ -116,6 +118,7 @@ def stream(username=None):
     return render_template(template, stream=stream, user=user)
 
 @app.route('/post/<int:post_id>')
+@login_required
 def view_post(post_id):
     posts = models.Post.select().where(models.Post.id == post_id)
     if posts.count() == 0:

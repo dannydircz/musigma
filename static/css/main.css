@@ -4,9 +4,9 @@ body, input, button, textarea {
 }
 body {
   font-size: 1em;
-  color: #777B7E;
+  color: #7851a9;
   font-weight: 400;
-  background: #D3D8DC;
+  background: #7851a9;
   position: relative;
 }
 a {
@@ -20,7 +20,7 @@ a:hover {
 /*Typography*/
 h1, h2, h3, h4 {
   font-size: 1.15em;
-  font-weight: normal;
+  font-weight: bolder;
   margin: 0;
   line-height: 1em;
 }
@@ -53,13 +53,15 @@ p {
 header {
   width: 100%;
   background: #fff;
-  padding: 10px 0;
+  padding: 20px 0;
+  color: black;
+  font-size: 1.15em;
 }
 .icon-logo {
   width: 30px;
-  height: 30px;
-  background: url('../img/icon-logo.svg') center no-repeat;
-  background-size: 22px 22px;
+  height: 40px;
+  background: url('../img/crest.png') center no-repeat;
+  background-size: 25px 48px;
   display: block;
   float: left;
 }
@@ -165,7 +167,7 @@ button {
   width: 100%;
   padding: 20px 0;
   text-align: center;
-  background: #6ECDF7;
+  background: black;
   color: #fff;
   border: 0;
   border-radius: 4px;
@@ -233,11 +235,11 @@ button.small {
   color: #fff;
 }
 .success {
-  background: #70DA8B;
-  color: #4DA463;
+  background: mediumpurple;
+  color: white;
 }
 .error {
-  background: #FFE6B2;
+  background: mediumpurple;
   color: #C5A14E;
   margin-bottom: 20px;
 }
