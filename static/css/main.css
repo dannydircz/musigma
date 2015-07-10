@@ -108,11 +108,11 @@ nav a {
 nav a.new {
   float: right;
   text-transform: uppercase;
-  color: #FFB770;
+  color: black;
 }
 nav a.current {
-  color: #FFB770;
-  border-bottom: 2px solid #FFB770;
+  color: black;
+  border-bottom: 2px solid mediumpurple;
 }
 article {
   border-bottom: 2px solid #ECEEEF;
@@ -146,7 +146,7 @@ input {
   color: #777B7E;
 }
 input:focus {
-  border-color: #6ECDF7;
+  border-color: mediumpurple;
   color: #2C3238;
 }
 textarea {
@@ -240,7 +240,7 @@ button.small {
 }
 .error {
   background: mediumpurple;
-  color: #C5A14E;
+  color: white;
   margin-bottom: 20px;
 }
 
