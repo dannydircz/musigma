@@ -39,6 +39,8 @@
                 <!-- Log in/Log out -->
                 {% if current_user.is_authenticated() %}
                 <a href="{{ url_for('logout') }}" class="icon-power" title="Log out"></a>
+                <a href="{{ url_for('calendar') }}" class="calendar" title="Calendar"></a>
+                <a href="{{ url_for('transaction') }}" class="money" title="Pay Dues"></a>
                 {% else %}
                 <a href="{{ url_for('login') }}" class="icon-power" title="Log in"></a>
                 <a href="{{ url_for('register') }}" class="icon-profile" title="Register"></a>

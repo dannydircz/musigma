@@ -90,13 +90,11 @@ def post():
     return render_template('post.html', form=form)
 
 
-
 @app.route('/')
 @login_required
 def index():
     stream = models.Post.select().limit(100)
     return render_template('stream.html', stream=stream)
-
 
 
 @app.route('/stream')
@@ -106,7 +104,7 @@ def stream(username=None):
     template = 'stream.html'
     if username and username != current_user.username:
         try:
-            user = models.User.select().where(models.User.username**username).get()
+            user = models.User.select().where(models.User.username ** username).get()
         except models.DoesNotExist:
             abort(404)
         else:
@@ -118,13 +116,15 @@ def stream(username=None):
         template = 'user_stream.html'
     return render_template(template, stream=stream, user=user)
 
+
 @app.route('/post/<int:post_id>')
 @login_required
 def view_post(post_id):
     posts = models.Post.select().where(models.Post.id == post_id)
     if posts.count() == 0:
         abort(404)
-    return render_template('stream.html', stream= posts)
+    return render_template('stream.html', stream=posts)
+
 
 @app.route('/delete_post/<int:post_id>')
 @login_required
@@ -135,20 +135,20 @@ def delete_post(post_id):
         abort(404)
     post.delete_instance()
     flash("This post has successfully been deleted.", "success")
-    return redirect(url_for('stream', stream = stream))
+    return redirect(url_for('stream', stream=stream))
 
 
 @app.route('/follow/<username>')
 @login_required
 def follow(username):
     try:
-        to_user = models.User.get(models.User.username**username)
+        to_user = models.User.get(models.User.username ** username)
     except models.DoesNotExist:
         abort(404)
     else:
         try:
             models.Relationship.create(
-                from_user = g.user._get_current_object(),
+                from_user=g.user._get_current_object(),
                 to_user=to_user
             )
         except models.IntegrityError:
@@ -157,17 +157,18 @@ def follow(username):
             flash("You're now following %s." % str(to_user.username), "success")
     return redirect(url_for('stream', username=to_user.username))
 
+
 @app.route('/unfollow/<username>')
 @login_required
 def unfollow(username):
     try:
-        to_user = models.User.get(models.User.username**username)
+        to_user = models.User.get(models.User.username ** username)
     except models.DoesNotExist:
         abort(404)
     else:
         try:
             models.Relationship.get(
-                from_user = g.user._get_current_object(),
+                from_user=g.user._get_current_object(),
                 to_user=to_user
             ).delete_instance()
         except models.IntegrityError:
@@ -176,19 +177,24 @@ def unfollow(username):
             flash("You have unfollowed %s." % str(to_user.username), "success")
     return redirect(url_for('stream', username=to_user.username))
 
+
 @app.errorhandler(404)
 def not_found(error):
     return render_template('404.html'), 404
 
+
+@app.route('/calendar')
+@login_required
+def calendar():
+    return render_template('calendar.html')
+
+
+@app.route('/transaction')
+@login_required
+def transaction():
+    pass
+
+
 if __name__ == '__main__':
     models.initialize()
-    try:
-        models.User.create_user(
-            username='ddircz',
-            email='dircz009@umn.edu',
-            password='pacman13',
-            admin=True
-        )
-    except ValueError:
-        pass
     app.run(debug=DEBUG)
