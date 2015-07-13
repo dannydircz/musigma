@@ -58,4 +58,4 @@ class LoginForm(Form):
     password = PasswordField('Password', validators=[DataRequired()])
 
 class PostForm(Form):
-    content = TextAreaField("Hello.", validators = [DataRequired()])
+    content = TextAreaField("Whats up?", validators = [DataRequired()])

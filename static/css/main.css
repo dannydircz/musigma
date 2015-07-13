@@ -59,9 +59,9 @@ header {
 }
 .icon-logo {
   width: 30px;
-  height: 40px;
+  height: 48px;
   background: url('../img/crest.png') center no-repeat;
-  background-size: 25px 48px;
+  background-size: 27px 48px;
   display: block;
   float: left;
 }
@@ -160,7 +160,7 @@ textarea {
   color: #777B7E;
 }
 textarea:focus {
-  border-color: #6ECDF7;
+  border-color: mediumpurple;
   color: #2C3238;
 }
 button {
@@ -246,7 +246,7 @@ button.small {
 
 /*Footer*/
 footer{
-  color: #777B7E;
+  color: white;
   text-align: center;
   font-size: .875em;
   margin: 40px 0;

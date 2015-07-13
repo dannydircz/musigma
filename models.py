@@ -1,8 +1,7 @@
 import datetime
-
+from time import strftime
 from flask.ext.login import UserMixin
 from flask.ext.bcrypt import generate_password_hash
-
 from peewee import *
 
 DATABASE = SqliteDatabase('social.db')
@@ -60,7 +59,7 @@ class User(UserMixin, Model):
 
 
 class Post(Model):
-    timestamp = DateTimeField(default=datetime.datetime.now)
+    timestamp = DateTimeField(default=datetime.datetime.now())
     user = ForeignKeyField(
         rel_model= User,
         related_name='posts'

@@ -90,6 +90,7 @@ def post():
     return render_template('post.html', form=form)
 
 
+
 @app.route('/')
 @login_required
 def index():
@@ -124,6 +125,18 @@ def view_post(post_id):
     if posts.count() == 0:
         abort(404)
     return render_template('stream.html', stream= posts)
+
+@app.route('/delete_post/<int:post_id>')
+@login_required
+def delete_post(post_id):
+    try:
+        post = models.Post.select().where(models.Post.id == post_id).get()
+    except models.DoesNotExist:
+        abort(404)
+    post.delete_instance()
+    flash("This post has successfully been deleted.", "success")
+    return redirect(url_for('stream', stream = stream))
+
 
 @app.route('/follow/<username>')
 @login_required
