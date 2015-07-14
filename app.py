@@ -42,7 +42,7 @@ def after_request(reponse):
 def register():
     form = forms.RegisterForm()
     if form.validate_on_submit():
-        flash("You have successfully registered. Bitch.", "success")
+        flash("You have successfully registered.", "success")
         models.User.create_user(
             username=form.username.data,
             email=form.email.data,
@@ -89,14 +89,6 @@ def post():
         return redirect(url_for('index'))
     return render_template('post.html', form=form)
 
-
-@app.route('/')
-@login_required
-def index():
-    stream = models.Post.select().limit(100)
-    return render_template('stream.html', stream=stream)
-
-
 @app.route('/stream')
 @app.route('/stream/<username>')
 @login_required
@@ -115,6 +107,36 @@ def stream(username=None):
     if username:
         template = 'user_stream.html'
     return render_template(template, stream=stream, user=user)
+
+@app.route('/new_contact', methods=('GET', 'POST'))
+@login_required
+def contact():
+    form = forms.ContactForm()
+    if form.validate_on_submit():
+        models.Contact.create(user = g.user._get_current_object(),
+                              name = form.name.data.strip(),
+                              email = form.email.data.strip(),
+                              number = form.number.data.strip(),
+                              position = form.position.data.strip())
+        flash("You have successfully created a contact", "success")
+        return redirect(url_for('contactList'))
+    return render_template('new_contact.html', form = form)
+
+@app.route('/contact')
+@login_required
+def contactList(username = None):
+    if username and username != current_user.username:
+        try:
+            user = models.User.select().where(models.User.username ** username).get()
+        except models.DoesNotExist:
+            abort(404)
+        else:
+            contactList = user.contact.limit(100)
+    else:
+        contactList = current_user.get_contactList().limit(100)
+        user = current_user
+    return render_template('contact.html', contactList = contactList, user = user)
+
 
 
 @app.route('/post/<int:post_id>')
@@ -194,6 +216,11 @@ def calendar():
 def transaction():
     pass
 
+@app.route('/')
+@login_required
+def index():
+    stream = models.Post.select().limit(100)
+    return render_template('stream.html', stream=stream)
 
 if __name__ == '__main__':
     models.initialize()

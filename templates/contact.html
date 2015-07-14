@@ -68,16 +68,24 @@
 
             <nav>
 
-              <a href="{{ url_for('index') }}">All</a>
+              <a href="{{ url_for('contactList') }}">Contacts</a>
 
                 {% if current_user.is_authenticated() %}
-                <a href="{{ url_for('stream', username=current_user.username) }}">Following</a>
-                <a href="{{ url_for('post') }}" class="new">Create New Post</a>
+                <a href="{{ url_for('contact') }}" class="new">Create New Contact</a>
                 {% endif %}
 
             </nav>
 
-            {% block content %}{% endblock %}
+            {% for contact in contactList %}
+                <article>
+                    <h2>
+                        {{ contact.name }}
+                    </h2>
+                    <h4>
+                        Email: {{ contact.email }}  |  Phone: {{ contact.number }}  |  Position: {{ contact.position }}
+                    </h4>
+                </article>
+            {% endfor %}
 
           </div>
 

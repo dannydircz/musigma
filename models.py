@@ -1,5 +1,5 @@
 import datetime
-from time import strftime
+
 from flask.ext.login import UserMixin
 from flask.ext.bcrypt import generate_password_hash
 from peewee import *
@@ -25,6 +25,11 @@ class User(UserMixin, Model):
         return Post.select().where(
             (Post.user << self.following()) |
             (Post.user == self)
+        )
+
+    def get_contactList(self):
+        return Contact.select().where(
+            Contact.user == self
         )
     def following(self):
         """the users we are following"""
@@ -70,6 +75,21 @@ class Post(Model):
         database = DATABASE
         order_by = ('-timestamp',)
 
+class Contact(Model):
+    user = ForeignKeyField(
+        rel_model= User,
+        related_name='contacts'
+    )
+    name = TextField()
+    email = TextField()
+    number = TextField()
+    position = TextField()
+
+    class Meta:
+        database = DATABASE
+        order_by = ('name',)
+
+
 class Relationship(Model):
     from_user = ForeignKeyField(User, related_name='relationships')
     to_user = ForeignKeyField(User, related_name='related_to')
@@ -82,5 +102,5 @@ class Relationship(Model):
 
 def initialize():
     DATABASE.connect()
-    DATABASE.create_tables([User, Post, Relationship], safe=True)
+    DATABASE.create_tables([User, Post, Relationship, Contact], safe=True)
     DATABASE.close()

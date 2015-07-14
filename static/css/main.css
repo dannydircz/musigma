@@ -39,7 +39,8 @@ h3 {
 h4 {
   margin: 10px 0 0;
   opacity: .7;
-  font-size: 2em;
+  font-size: 1em;
+  color: black;
 }
 h5 {
     margin: 0;
@@ -56,6 +57,25 @@ header {
   padding: 20px 0;
   color: black;
   font-size: 1.15em;
+}
+.stream{
+  width: 30px;
+  height: 30px;
+  background: url('../img/activity.png') center no-repeat;
+  background-size: 27px 27px;
+  display: block;
+  float: right;
+  margin-right: 10px;
+
+}
+.contactList{
+  width: 30px;
+  height: 30px;
+  background: url('../img/contact.svg') center no-repeat;
+  background-size: 27px 27px;
+  display: block;
+  float: right;
+  margin-right: 10px;
 }
 .calendar {
   width: 30px;
