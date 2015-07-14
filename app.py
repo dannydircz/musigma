@@ -89,6 +89,7 @@ def post():
         return redirect(url_for('index'))
     return render_template('post.html', form=form)
 
+
 @app.route('/stream')
 @app.route('/stream/<username>')
 @login_required
@@ -108,23 +109,25 @@ def stream(username=None):
         template = 'user_stream.html'
     return render_template(template, stream=stream, user=user)
 
+
 @app.route('/new_contact', methods=('GET', 'POST'))
 @login_required
 def contact():
     form = forms.ContactForm()
     if form.validate_on_submit():
-        models.Contact.create(user = g.user._get_current_object(),
-                              name = form.name.data.strip(),
-                              email = form.email.data.strip(),
-                              number = form.number.data.strip(),
-                              position = form.position.data.strip())
+        models.Contact.create(user=g.user._get_current_object(),
+                              name=form.name.data.strip(),
+                              email=form.email.data.strip(),
+                              number=form.number.data.strip(),
+                              position=form.position.data.strip())
         flash("You have successfully created a contact", "success")
         return redirect(url_for('contactList'))
-    return render_template('new_contact.html', form = form)
+    return render_template('new_contact.html', form=form)
+
 
 @app.route('/contact')
 @login_required
-def contactList(username = None):
+def contactList(username=None):
     if username and username != current_user.username:
         try:
             user = models.User.select().where(models.User.username ** username).get()
@@ -135,8 +138,7 @@ def contactList(username = None):
     else:
         contactList = current_user.get_contactList().limit(100)
         user = current_user
-    return render_template('contact.html', contactList = contactList, user = user)
-
+    return render_template('contact.html', contactList=contactList, user=user)
 
 
 @app.route('/post/<int:post_id>')
@@ -158,6 +160,17 @@ def delete_post(post_id):
     post.delete_instance()
     flash("This post has successfully been deleted.", "success")
     return redirect(url_for('stream', stream=stream))
+
+@app.route('/delete_contact/<int:contact_id>')
+@login_required
+def delete_contact(contact_id):
+    try:
+        contact = models.Contact.select().where(models.Contact.id == contact_id).get()
+    except models.DoesNotExist:
+        abort(404)
+    contact.delete_instance()
+    flash("This contact has successfully been deleted.", "success")
+    return redirect(url_for('contactList', contactList=contactList))
 
 
 @app.route('/follow/<username>')
@@ -216,11 +229,13 @@ def calendar():
 def transaction():
     pass
 
+
 @app.route('/')
 @login_required
 def index():
     stream = models.Post.select().limit(100)
     return render_template('stream.html', stream=stream)
+
 
 if __name__ == '__main__':
     models.initialize()

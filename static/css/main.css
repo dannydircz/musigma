@@ -265,6 +265,11 @@ button.small {
     font-size: 0.8em;
 
 }
+.view2 {
+    font-size: 0.7em;
+
+}
+
 
 /*Notifications*/
 .notification {
@@ -325,7 +330,7 @@ footer p {
   width: 33%;
 }
 .grid-25{
-    display: inline-block;
+  display: inline-block;
   float: left;
   width: 20%;
   margin: 0 2.25%;
