@@ -135,6 +135,17 @@ header {
   max-width: 320px;
   padding: 40px;
 }
+.bleed_purple{
+  width: 800px;
+  height: 190px;
+  background: url('../img/bleed_purple.jpg') center no-repeat;
+  background-size: 27px 27px;
+  display: block;
+  float: right;
+
+
+}
+
 nav{
   padding: 0 0 0 20px;
   position: relative;

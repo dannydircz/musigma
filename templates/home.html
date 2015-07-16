@@ -28,14 +28,14 @@
             </div>
 
             <div class="grid-33">
-                
+
                 <!-- Say Hi -->
                 <h1>Hello{% if current_user.is_authenticated() %} {{ current_user.username }}{% endif %}!</h1>
 
             </div>
 
             <div class="grid-33">
-                
+
                 <!-- Log in/Log out -->
                 {% if current_user.is_authenticated() %}
                 <a href="{{ url_for('logout') }}" class="icon-power" title="Log out"></a>
@@ -47,13 +47,13 @@
                 <a href="{{ url_for('login') }}" class="icon-power" title="Log in"></a>
                 <a href="{{ url_for('register') }}" class="icon-profile" title="Register"></a>
                 {% endif %}
-                
+
             </div>
 
           </div>
 
         </header>
-        
+
         <!-- Flash messages -->
         {% with messages = get_flashed_messages(with_categories=True) %}
             {% if messages %}
@@ -65,20 +65,19 @@
    <div class="row">
 
           <div class="main">
-
-            <nav>
-
-              <a href="{{ url_for('stream') }}">All</a>
-
-                {% if current_user.is_authenticated() %}
-                <a href="{{ url_for('stream', username=current_user.username) }}">Following</a>
-                <a href="{{ url_for('post') }}" class="new">Create New Post</a>
-                {% endif %}
-
-            </nav>
-
-            {% block content %}{% endblock %}
-
+            <img src="../static/img/bleed_purple.jpg" class="bleed_purple">
+              <p><b>Welcome to the Mu Sigma Fratenity Application.</b></p>
+              <p>This Web application was designed to make certain actions easier, such as paying dues.</p>
+              <br>
+              <UL>
+              <LI><a href="{{ url_for('calendar') }}"><b>Calendar</b></a></LI>
+              <br>
+              <LI><a href="{{ url_for('transaction') }}"><b>Pay Dues</b></a></LI>
+              <br>
+              <Li><a href="{{ url_for('stream') }}"><b>FIJI Stream</b></a></Li>
+              <br>
+              <LI><a href="{{ url_for('contactList') }}"><b>Contact List</b></a></LI>
+              </UL>
           </div>
 
         </div>

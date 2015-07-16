@@ -233,8 +233,7 @@ def transaction():
 @app.route('/')
 @login_required
 def index():
-    stream = models.Post.select().limit(100)
-    return render_template('stream.html', stream=stream)
+    return render_template('home.html')
 
 
 if __name__ == '__main__':
