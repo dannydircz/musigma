@@ -156,16 +156,16 @@ nav a {
   padding: 0 20px 10px;
 }
 nav a.new {
-  float: right;
-  text-transform: uppercase;
   color: black;
+  float: right;
+  padding: 0 20px 0px;
 }
 nav a.current {
   color: black;
   border-bottom: 2px solid mediumpurple;
 }
 article {
-  border-bottom: 2px solid #ECEEEF;
+  border-bottom: 2px solid mediumpurple;
   margin: 0;
   padding: 40px;
 }
