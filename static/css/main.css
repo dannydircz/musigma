@@ -95,6 +95,16 @@ header {
   float: right;
   margin-right: 10px;
 }
+.docs{
+  width: 30px;
+  height: 30px;
+  background: url('../img/doc.png') center no-repeat;
+  background-size: 27px 27px;
+  display: block;
+  float: right;
+  margin-right: 10px;
+}
+
 .icon-logo {
   width: 30px;
   height: 48px;

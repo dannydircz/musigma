@@ -43,6 +43,7 @@
                 <a href="{{ url_for('transaction') }}" class="money" title="Pay Dues"></a>
                 <a href="{{ url_for('stream') }}" class="stream" title="Stream"></a>
                 <a href="{{ url_for('contactList') }}" class="contactList" title="Contact List"></a>
+                <a href="{{ url for ('docs') }}" class="docs" title="Docs"></a>
                 {% else %}
                 <a href="{{ url_for('login') }}" class="icon-power" title="Log in"></a>
                 <a href="{{ url_for('register') }}" class="icon-profile" title="Register"></a>

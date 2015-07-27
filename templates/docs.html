@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+<br>
+<h1>Important Documents</h1>
+<UL>
+    <LI><a href="{{ url_for('transaction') }}"><b>Sober Bro List</b></a></LI>
+    <br>
+    <Li><a href="{{ url_for('stream') }}"><b>Dish List</b></a></Li>
+    <br>
+    <LI><a href="{{ url_for('contactList') }}"><b>Workjob List</b></a></LI>
+</UL>
+{% endblock %}

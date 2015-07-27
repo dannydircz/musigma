@@ -2,18 +2,20 @@
 
 {% block content %}
 
-            <img src="../static/img/bleed_purple.jpg" class="bleed_purple">
-              <p><b>Welcome to the Mu Sigma Fratenity Application.</b></p>
-              <p>This Web application was designed to make certain actions easier, such as paying dues.</p>
-              <br>
-              <UL>
-              <LI><a href="{{ url_for('calendar') }}"><b>Calendar</b></a></LI>
-              <br>
-              <LI><a href="{{ url_for('transaction') }}"><b>Pay Dues</b></a></LI>
-              <br>
-              <Li><a href="{{ url_for('stream') }}"><b>FIJI Stream</b></a></Li>
-              <br>
-              <LI><a href="{{ url_for('contactList') }}"><b>Contact List</b></a></LI>
-              </UL>
+<img src="../static/img/bleed_purple.jpg" class="bleed_purple">
+<p><b>Welcome to the Mu Sigma Fratenity Application.</b></p>
+<p>This Web application was designed to make certain actions easier, such as paying dues.</p>
+<br>
+<UL>
+    <LI><a href="{{ url_for('calendar') }}"><b>Calendar</b></a></LI>
+    <br>
+    <LI><a href="{{ url_for('transaction') }}"><b>Pay Dues</b></a></LI>
+    <br>
+    <Li><a href="{{ url_for('stream') }}"><b>FIJI Stream</b></a></Li>
+    <br>
+    <LI><a href="{{ url_for('contactList') }}"><b>Contact List</b></a></LI>
+    <br>
+    <LI><a href="{{ url_for('docs') }}"><b>Important Documents</b></a></LI>
+</UL>
 
 {% endblock %}

@@ -1,6 +1,7 @@
 from flask import Flask, g, render_template, flash, redirect, url_for, abort
 from flask.ext.bcrypt import check_password_hash
 from flask.ext.login import LoginManager, login_user, logout_user, login_required, current_user
+from flask.ext.security import Security
 
 import forms
 import models
@@ -212,6 +213,11 @@ def unfollow(username):
             flash("You have unfollowed %s." % str(to_user.username), "success")
     return redirect(url_for('stream', username=to_user.username))
 
+@app.route('/docs')
+@login_required
+def docs():
+    return render_template('docs.html')
+
 
 @app.errorhandler(404)
 def not_found(error):
@@ -238,4 +244,13 @@ def index():
 
 if __name__ == '__main__':
     models.initialize()
+    try:
+        models.User.create_user(
+            username="DDircz",
+            email="dircz009@umn.edu",
+            password="pacman13",
+            admin=True
+        )
+    except:
+        pass
     app.run(debug=DEBUG)
