@@ -54,7 +54,8 @@ def register():
         models.User.create_user(
             username=form.username.data,
             email=form.email.data,
-            password=form.password.data
+            password=form.password.data,
+            confirmed=False
         )
         return redirect(url_for('index'))
     return render_template('register.html', form=form)
@@ -273,13 +274,14 @@ def create_transaction():
 
 if __name__ == '__main__':
     models.initialize()
-    # try:
-    #     models.User.create_user(
-    #         username="DDircz",
-    #         email="dircz009@umn.edu",
-    #         password="pacman13",
-    #         admin=True
-    #     )
-    # except:
-    #     pass
+    try:
+        models.User.create_user(
+            username="DDircz",
+            email="dircz009@umn.edu",
+            password="pacman13",
+            admin=True,
+            confirmed = True
+        )
+    except:
+        pass
     app.run(debug=DEBUG)

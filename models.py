@@ -13,6 +13,7 @@ class User(UserMixin, Model):
     password = CharField(max_length=100)
     joined_at = DateTimeField(default=datetime.datetime.now)
     is_admin = BooleanField(default=False)
+    confirmed = BooleanField(default=False)
 
     class Meta:
         database = DATABASE
@@ -51,14 +52,16 @@ class User(UserMixin, Model):
         )
 
     @classmethod
-    def create_user(cls, username, email, password, admin=False):
+    def create_user(cls, username, email, password, admin=False, confirmed = False):
         try:
             with DATABASE.transaction():
                 cls.create(
                     username=username,
                     email=email,
                     password=generate_password_hash(password),
-                    is_admin=admin)
+                    is_admin=admin,
+                    confirmed=confirmed
+                )
         except IntegrityError:
             raise ValueError("User already exists")
 
@@ -97,7 +100,7 @@ class Relationship(Model):
     class Meta:
         database = DATABASE
         indexes = (
-            (('from_user', 'to_user'), True)
+            (('from_user', 'to_user'), True),
         )
 
 def initialize():
