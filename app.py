@@ -1,10 +1,12 @@
-from flask import Flask, g, render_template, flash, redirect, url_for, abort
+from flask import Flask, g, render_template, flash, redirect, url_for, abort, request
 from flask.ext.bcrypt import check_password_hash
 from flask.ext.login import LoginManager, login_user, logout_user, login_required, current_user
 from flask.ext.security import Security
 
 import forms
 import models
+import braintree
+from braintree.test.nonces import Nonces
 
 DEBUG = True
 
@@ -15,6 +17,11 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
+
+braintree.Configuration.configure(braintree.Environment.Sandbox,
+                                  merchant_id="r425x7k6hpjyjf4b",
+                                  public_key="cs9dd5t2htkcwspp",
+                                  private_key="74eab924128813b4ec51c3f60d5e575e")
 
 @login_manager.user_loader
 def user_loader(userid):
@@ -232,25 +239,47 @@ def calendar():
 
 @app.route('/transaction')
 @login_required
-def transaction():
-    pass
-
+def form():
+    # return render_template('transaction.html')
+    return render_template('404.html'), 404
 
 @app.route('/')
 @login_required
 def index():
     return render_template('home.html')
 
+@app.route("/client_token", methods=["GET"])
+def client_token():
+  return braintree.ClientToken.generate()
+
+@app.route("/create_transaction", methods=["POST"])
+def create_transaction():
+    result = braintree.Transaction.sale({
+        "amount": "1000.00",
+        "credit_card": {
+            "number": request.form["number"],
+            "cvv": request.form["cvv"],
+            "expiration_month": request.form["month"],
+            "expiration_year": request.form["year"]
+        },
+        "options": {
+            "submit_for_settlement": True
+        }
+    })
+    if result.is_success:
+        return "<h1>Success! Transaction ID: {0}</h1>".format(result.transaction.id)
+    else:
+        return "<h1>Error: {0}</h1>".format(result.message)
 
 if __name__ == '__main__':
     models.initialize()
-    try:
-        models.User.create_user(
-            username="DDircz",
-            email="dircz009@umn.edu",
-            password="pacman13",
-            admin=True
-        )
-    except:
-        pass
+    # try:
+    #     models.User.create_user(
+    #         username="DDircz",
+    #         email="dircz009@umn.edu",
+    #         password="pacman13",
+    #         admin=True
+    #     )
+    # except:
+    #     pass
     app.run(debug=DEBUG)

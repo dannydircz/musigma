@@ -42,7 +42,7 @@
                 {% if current_user.is_authenticated() %}
                 <a href="{{ url_for('logout') }}" class="icon-power" title="Log out"></a>
                 <a href="{{ url_for('calendar') }}" class="calendar" title="Calendar"></a>
-                <a href="{{ url_for('transaction') }}" class="money" title="Pay Dues"></a>
+                <a href="{{ url_for('form') }}" class="money" title="Pay Dues"></a>
                 <a href="{{ url_for('stream') }}" class="stream" title="Stream"></a>
                 <a href="{{ url_for('contactList') }}" class="contactList" title="Contact List"></a>
                 <a href="{{ url_for ('docs') }}" class="docs" title="Docs"></a>
