@@ -1,21 +1,30 @@
+import os
 from flask import Flask, g, render_template, flash, redirect, url_for, abort, request
 from flask.ext.bcrypt import check_password_hash
 from flask.ext.login import LoginManager, login_user, logout_user, login_required, current_user
-from flask.ext.security import Security
+import app_email
+from flask_mail import Mail
+
 
 import forms
 import models
 import braintree
-from braintree.test.nonces import Nonces
+
+
+from app_token import generate_confirmation_token, confirm_token
+
 
 DEBUG = True
 
 app = Flask(__name__)
 app.secret_key = 'asdklakdnksalnd.232,ihsadnndn'
-
+mail = Mail(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
+#app.config.from_object(os.environ['APP_SETTINGS'])
+
+
 
 
 braintree.Configuration.configure(braintree.Environment.Sandbox,
@@ -51,14 +60,41 @@ def register():
     form = forms.RegisterForm()
     if form.validate_on_submit():
         flash("You have successfully registered.", "success")
+
+
         models.User.create_user(
             username=form.username.data,
             email=form.email.data,
             password=form.password.data,
             confirmed=False
         )
+        user = models.User.get(models.User.email == form.email.data)
+        token = generate_confirmation_token(user.email)
+        confirm_url = url_for('confirm_email', token=token, _external=True)
+        html = render_template('activate.html', confirm_url=confirm_url)
+        subject = "Please confirm this new user."
+        app_email.send_email("musigmaapp@gmail.com", subject, html)
+
+        login_user(user)
+
+        flash('A confirmation email has been sent via email.', 'success')
         return redirect(url_for('index'))
     return render_template('register.html', form=form)
+
+@app.route('/confirm/<token>')
+@login_required
+def confirm_email(token):
+    try:
+        email = confirm_token(token)
+    except:
+        flash('The confirmation link is invalid or has expired.', 'danger')
+    user = models.User.query.filter_by(email=email).first_or_404()
+    if user.confirmed:
+        flash('Account already confirmed. Please login.', 'success')
+    else:
+        user.confirmed = True
+        flash('You have confirmed your account. Thanks!', 'success')
+    return render_template("home.html")
 
 
 @app.route('/login', methods=('GET', 'POST'))
