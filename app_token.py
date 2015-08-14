@@ -12,7 +12,7 @@ def confirm_token(token, expiration=3600):
     try:
         email = serializer.loads(
             token,
-            salt=[SECURITY_PASSWORD_SALT],
+            salt=SECURITY_PASSWORD_SALT,
             max_age=expiration
         )
     except:

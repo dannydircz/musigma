@@ -70,3 +70,23 @@ class ContactForm(Form):
     number = StringField("Phone Number")
     position = StringField("Position Held")
 
+class ChangePasswordForm(Form):
+    email = StringField(
+        'Enter your Email',
+        validators=[
+            DataRequired(),
+            Email()
+        ]
+    )
+    password = PasswordField(
+        'Password',
+        validators=[DataRequired(),
+                    Length(min=5),
+                    EqualTo('password2', message='Passwords must match')]
+    )
+    password2 = PasswordField(
+        'Confirm Password',
+        validators=[
+            DataRequired()
+        ]
+    )

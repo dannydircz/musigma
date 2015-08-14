@@ -1,6 +1,6 @@
 import os
 from flask import Flask, g, render_template, flash, redirect, url_for, abort, request
-from flask.ext.bcrypt import check_password_hash
+from flask.ext.bcrypt import check_password_hash, generate_password_hash
 from flask.ext.login import LoginManager, login_user, logout_user, login_required, current_user
 import app_email
 from flask_mail import Mail
@@ -78,7 +78,7 @@ def register():
         login_user(user)
 
         flash('A confirmation email has been sent via email.', 'success')
-        return redirect(url_for('index'))
+        return redirect(url_for('unconfirmed'))
     return render_template('register.html', form=form)
 
 @app.route('/confirm/<token>')
@@ -87,7 +87,7 @@ def confirm_email(token):
     try:
         email = confirm_token(token)
     except:
-        flash('The confirmation link is invalid or has expired.', 'danger')
+        flash('The confirmation link is invalid or has expired.', 'error')
     user = models.User.query.filter_by(email=email).first_or_404()
     if user.confirmed:
         flash('Account already confirmed. Please login.', 'success')
@@ -95,6 +95,14 @@ def confirm_email(token):
         user.confirmed = True
         flash('You have confirmed your account. Thanks!', 'success')
     return render_template("home.html")
+
+@app.route('/unconfirmed')
+@login_required
+def unconfirmed():
+    if current_user.confirmed:
+        return redirect(url_for("index"))
+    flash('Please confirm your account!', 'warning')
+    return render_template('unconfirmed.html')
 
 
 @app.route('/login', methods=('GET', 'POST'))
@@ -131,7 +139,7 @@ def post():
         models.Post.create(user=g.user._get_current_object(),
                            content=form.content.data.strip())
         flash("Message posted.", "success")
-        return redirect(url_for('index'))
+        return redirect(url_for('stream'))
     return render_template('post.html', form=form)
 
 
@@ -256,6 +264,21 @@ def unfollow(username):
         else:
             flash("You have unfollowed %s." % str(to_user.username), "success")
     return redirect(url_for('stream', username=to_user.username))
+
+@app.route('/profile', methods=['GET', 'POST'])
+@login_required
+def profile():
+    form = forms.ChangePasswordForm()
+    if form.validate_on_submit():
+        user = models.User.get(models.User.email == form.email.data)
+        if user:
+            user.password = generate_password_hash(form.password.data)
+            flash('Password successfully changed.', 'success')
+            return redirect(url_for('profile'))
+        else:
+            flash('Password change was unsuccessful.', 'error')
+            return redirect(url_for('profile'))
+    return render_template('profile.html', form=form)
 
 @app.route('/docs')
 @login_required

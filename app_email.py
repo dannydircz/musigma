@@ -9,7 +9,7 @@ from app import mail
 def send_email(to, subject, template):
     msg = Message(
         subject,
-        recipients=["musigmaapp@gmail.com"],
+        recipients=[to],
         html=template,
         sender= MAIL_DEFAULT_SENDER
     )
