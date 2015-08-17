@@ -4,7 +4,7 @@ from flask.ext.bcrypt import check_password_hash, generate_password_hash
 from flask.ext.login import LoginManager, login_user, logout_user, login_required, current_user
 import app_email
 from flask_mail import Mail
-
+from decorators import check_confirmed
 
 import forms
 import models
@@ -17,12 +17,13 @@ from app_token import generate_confirmation_token, confirm_token
 DEBUG = True
 
 app = Flask(__name__)
+app.config.from_object('config.BaseConfig')
 app.secret_key = 'asdklakdnksalnd.232,ihsadnndn'
 mail = Mail(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
-#app.config.from_object(os.environ['APP_SETTINGS'])
+app.config.from_object('config.BaseConfig')
 
 
 
@@ -59,8 +60,6 @@ def after_request(reponse):
 def register():
     form = forms.RegisterForm()
     if form.validate_on_submit():
-        flash("You have successfully registered.", "success")
-
 
         models.User.create_user(
             username=form.username.data,
@@ -88,13 +87,16 @@ def confirm_email(token):
         email = confirm_token(token)
     except:
         flash('The confirmation link is invalid or has expired.', 'error')
-    user = models.User.query.filter_by(email=email).first_or_404()
+    #user = models.User.get(models.User.email == email)
+    #user = models.User.select().where(models.User.email == email)
+    user = current_user
     if user.confirmed:
         flash('Account already confirmed. Please login.', 'success')
     else:
         user.confirmed = True
+        user.save()
         flash('You have confirmed your account. Thanks!', 'success')
-    return render_template("home.html")
+    return redirect(url_for('index'))
 
 @app.route('/unconfirmed')
 @login_required
@@ -305,6 +307,7 @@ def form():
 
 @app.route('/')
 @login_required
+@check_confirmed
 def index():
     return render_template('home.html')
 

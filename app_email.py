@@ -1,7 +1,7 @@
 __author__ = 'DannyDircz'
 
-
-from config import MAIL_DEFAULT_SENDER
+import config
+#from config import MAIL_DEFAULT_SENDER
 
 from flask.ext.mail import Message
 from app import mail
@@ -11,6 +11,6 @@ def send_email(to, subject, template):
         subject,
         recipients=[to],
         html=template,
-        sender= MAIL_DEFAULT_SENDER
+        sender= config.BaseConfig.MAIL_DEFAULT_SENDER
     )
     mail.send(msg)

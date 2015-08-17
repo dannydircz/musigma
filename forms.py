@@ -79,7 +79,7 @@ class ChangePasswordForm(Form):
         ]
     )
     password = PasswordField(
-        'Password',
+        'New Password',
         validators=[DataRequired(),
                     Length(min=5),
                     EqualTo('password2', message='Passwords must match')]
