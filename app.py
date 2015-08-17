@@ -71,17 +71,14 @@ def register():
         token = generate_confirmation_token(user.email)
         confirm_url = url_for('confirm_email', token=token, _external=True)
         html = render_template('activate.html', confirm_url=confirm_url)
-        subject = "Please confirm this new user."
+        subject = "Confirm new user: %s: %s" % (user.email, user.username)
         app_email.send_email("musigmaapp@gmail.com", subject, html)
 
-        login_user(user)
-
-        flash('A confirmation email has been sent via email.', 'success')
+        flash('A confirmation email has been sent to Danny via email.', 'success')
         return redirect(url_for('unconfirmed'))
     return render_template('register.html', form=form)
 
 @app.route('/confirm/<token>')
-@login_required
 def confirm_email(token):
     try:
         email = confirm_token(token)
@@ -89,13 +86,14 @@ def confirm_email(token):
         flash('The confirmation link is invalid or has expired.', 'error')
     #user = models.User.get(models.User.email == email)
     #user = models.User.select().where(models.User.email == email)
-    user = current_user
+    #user = current_user
+    user = models.User.select().order_by(models.User.id.desc()).get()
     if user.confirmed:
         flash('Account already confirmed. Please login.', 'success')
     else:
         user.confirmed = True
         user.save()
-        flash('You have confirmed your account. Thanks!', 'success')
+        flash('You have confirmed this account. Thanks!', 'success')
     return redirect(url_for('index'))
 
 @app.route('/unconfirmed')
@@ -103,7 +101,7 @@ def confirm_email(token):
 def unconfirmed():
     if current_user.confirmed:
         return redirect(url_for("index"))
-    flash('Please confirm your account!', 'warning')
+    flash('You account has not been confirmed!', 'error')
     return render_template('unconfirmed.html')
 
 
@@ -275,6 +273,7 @@ def profile():
         user = models.User.get(models.User.email == form.email.data)
         if user:
             user.password = generate_password_hash(form.password.data)
+            user.save()
             flash('Password successfully changed.', 'success')
             return redirect(url_for('profile'))
         else:

@@ -5,9 +5,11 @@
     <title></title>
 </head>
 <body>
-<p>Welcome! Thanks for signing up. Please follow this link to activate your account:</p>
-<p><a href="{{ confirm_url }}">{{ confirm_url }}</a></p>
+<p>Danny,</p>
+
+<p>A user with the email {{current_user.email }} and username {{ current_user.username }} wishes to join. </p>
+<p>Confirm here: <a href="{{ confirm_url }}">{{ confirm_url }}</a></p>
 <br>
-<p>Cheers!</p>
+<p>P!</p>
 </body>
 </html>
