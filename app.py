@@ -291,8 +291,8 @@ def calendar():
 @app.route('/transaction')
 @login_required
 def form():
-    # return render_template('transaction.html')
-    return render_template('404.html'), 404
+    return render_template('transaction.html')
+    #return render_template('404.html'), 404
 
 @app.route('/')
 @login_required
