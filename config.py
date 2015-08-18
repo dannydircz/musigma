@@ -4,7 +4,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 class BaseConfig(object):
     SECRET_KEY = 'i am a baller'
     SECURITY_PASSWORD_SALT = 'mippy rox'
-    DEBUG = False
+    DEBUG = True
     BCRYPT_LOG_ROUNDS = 13
     WTF_CSRF_ENABLED = True
     DEBUG_TB_ENABLED = False

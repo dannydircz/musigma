@@ -1,37 +1,30 @@
-import os
-from flask import Flask, g, render_template, flash, redirect, url_for, abort, request
+
+from flask import Flask, g, render_template, flash, redirect, url_for, abort
 from flask.ext.bcrypt import check_password_hash, generate_password_hash
 from flask.ext.login import LoginManager, login_user, logout_user, login_required, current_user
-import app_email
-from flask_mail import Mail
-from decorators import check_confirmed
 
+from flask_mail import Mail
+
+import config
 import forms
 import models
-import braintree
 
-
+import app_email
+from decorators import check_confirmed
 from app_token import generate_confirmation_token, confirm_token
 
 
-DEBUG = True
+
 
 app = Flask(__name__)
 app.config.from_object('config.BaseConfig')
-app.secret_key = 'asdklakdnksalnd.232,ihsadnndn'
+app.secret_key = config.BaseConfig.SECRET_KEY
 mail = Mail(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
-app.config.from_object('config.BaseConfig')
 
 
-
-
-braintree.Configuration.configure(braintree.Environment.Sandbox,
-                                  merchant_id="r425x7k6hpjyjf4b",
-                                  public_key="cs9dd5t2htkcwspp",
-                                  private_key="74eab924128813b4ec51c3f60d5e575e")
 
 @login_manager.user_loader
 def user_loader(userid):
@@ -84,9 +77,6 @@ def confirm_email(token):
         email = confirm_token(token)
     except:
         flash('The confirmation link is invalid or has expired.', 'error')
-    #user = models.User.get(models.User.email == email)
-    #user = models.User.select().where(models.User.email == email)
-    #user = current_user
     user = models.User.select().order_by(models.User.id.desc()).get()
     if user.confirmed:
         flash('Account already confirmed. Please login.', 'success')
@@ -310,28 +300,7 @@ def form():
 def index():
     return render_template('home.html')
 
-@app.route("/client_token", methods=["GET"])
-def client_token():
-  return braintree.ClientToken.generate()
 
-@app.route("/create_transaction", methods=["POST"])
-def create_transaction():
-    result = braintree.Transaction.sale({
-        "amount": "1000.00",
-        "credit_card": {
-            "number": request.form["number"],
-            "cvv": request.form["cvv"],
-            "expiration_month": request.form["month"],
-            "expiration_year": request.form["year"]
-        },
-        "options": {
-            "submit_for_settlement": True
-        }
-    })
-    if result.is_success:
-        return "<h1>Success! Transaction ID: {0}</h1>".format(result.transaction.id)
-    else:
-        return "<h1>Error: {0}</h1>".format(result.message)
 
 if __name__ == '__main__':
     models.initialize()
@@ -345,4 +314,4 @@ if __name__ == '__main__':
         )
     except:
         pass
-    app.run(debug=DEBUG)
+    app.run(debug=config.BaseConfig.DEBUG)
